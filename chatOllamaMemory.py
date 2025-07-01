@@ -1,32 +1,37 @@
 from langchain_ollama import OllamaLLM
-from langchain_core.promts import ChatPrompTemplate
+from langchain_core.prompts import ChatPromptTemplate
 import time
 
-template = '''
-Tu es un professeur de scince au lycee. Sois clair, concis et pedagogue
+template ="""
 
+Tu es un professeur de sciences au lycée. Sois clair, concis et pédagogue. 
+Explique les réponses en utilisant des exemples simples et un langage adapté aux élèves de 16 ans.
+
+Voici l’historique de la conversation : {context}
 
 Question : {question}
 
-Reponse :
+Réponse :
 
-'''
+"""
 
 model = OllamaLLM(model="mistral")
-prompt = ChatPrompTemplate.from_template(template)
+prompt = ChatPromptTemplate.from_template(template)
 chain = prompt | model
 
-def handleConverdation():
-    contex=""
-    print("BOnjour je suis Alexandre, comment je peux aider? Si vous n'avez pas de question ecrivez 'quit'")
+def handleConversation():
+    context=""
+    print(" Bonjour je suis Alexandra, comment je peux vous aider? Si vous n'avez pas de question ecrivez 'quit'")
     while True:
         user_input = input("Vous :")
         if user_input.lower() == 'quit':
             break
-        result = chain.invoke("context":context , "question":user_input)
-        for char in resulte:
+        result = chain.invoke({"context":context , "question":user_input})
+        for char in result:
             print(char, end="" , flush=True)
-            time.sleep(0.02) 
-        print()
-        context += f
+            time.sleep(0.02)
+        print() 
+        context += f"\nUser: {user_input}\nAI: {result}"  
+if __name__=='__main__':
+    handleConversation()
 
